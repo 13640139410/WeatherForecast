@@ -2,9 +2,11 @@ package com.weatherforecast.util;
 
 import android.text.TextUtils;
 
+import com.google.gson.Gson;
 import com.weatherforecast.db.City;
 import com.weatherforecast.db.County;
 import com.weatherforecast.db.Province;
+import com.weatherforecast.gson.Weather;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -14,7 +16,7 @@ import org.json.JSONObject;
  * Created by admin on 2020/8/25.
  */
 
-public class Utiltity {
+public class Utility {
     /**
      * 返回的省级JSON格式数据的格式如下：
      * [{"id":1,"name":"北京"},{"id":2,"name":"上海"},{"id":3,"name":"天津"}, {"id":4,"name":"重庆"},...]
@@ -85,5 +87,19 @@ public class Utiltity {
             }
         }
         return false;
+    }
+    /**
+     * 将返回的JSON数据解析成Weather实体类
+     */
+    public static Weather handleWeatherResponse(String response){
+        try {
+            JSONObject jsonObject = new JSONObject(response);
+            JSONArray jsonArray = jsonObject.getJSONArray("HeWeather");
+            String WeatherContent = jsonArray.getJSONObject(0).toString();
+            return new Gson().fromJson(WeatherContent,Weather.class);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
     }
 }
